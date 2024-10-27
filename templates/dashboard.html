@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="{{ url_for('static', filename='scripta.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #343a40;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+        .logo {
+            font-size: 1.5rem;
+        }
+        .profile-container {
+            position: relative;
+        }
+        .profile-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .profile-button:hover {
+            background-color: #d1d5db;
+        }
+        .profile-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: #4b5563;
+        }
+        .profile-card {
+            position: absolute;
+            top: 3.5rem;
+            right: 0;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            width: 12rem;
+            display: none;
+        }
+        .profile-card.visible {
+            display: block;
+        }
+        .close-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .close-button:hover {
+            color: #4b5563;
+        }
+        .username {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+        .logout-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Skill Navigator</div>
+        <div class="profile-container">
+            <button class="profile-button" onclick="toggleProfileCard()">
+                     <circle cx="12" cy="7" r="4"></circle>
+                     <img class="image-button"src="{{ url_for('static', filename='images/iconnn.png') }}" alt="Button Image">
+
+                 
+            </button>
+            <div id="profileCard" class="profile-card">
+                <button class="close-button" onclick="closeProfileCard()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <p class="username"><b>User : </b>{{ username }}</p>
+                <a href="/logout" class="logout-link">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <p>Welcome, <b>{{ username }}!</b></p>
+        <p>Enter a skill to get job recommendations:</p>
+        <form id="recommendationForm" action="{{ url_for('recommend') }}" method="POST" onsubmit="showLoadingMessage()">
+            <input placeholder="Ex: Python, Flask...." type="text" id="skill" name="skill" required>
+            <button class="neu-button" onclick="showLoading(); setTimeout(hideLoading, 3000);" type="submit">Get</button>
+        </form>
+
+        <div id="loading" class="loading-popup" style="display: none;">
+            <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
+                <div class="wheel"></div>
+                <div class="hamster">
+                    <div class="hamster__body">
+                        <div class="hamster__head">
+                            <div class="hamster__ear"></div>
+                            <div class="hamster__eye"></div>
+                            <div class="hamster__nose"></div>
+                        </div>
+                        <div class="hamster__limb hamster__limb--fr"></div>
+                        <div class="hamster__limb hamster__limb--fl"></div>
+                        <div class="hamster__limb hamster__limb--br"></div>
+                        <div class="hamster__limb hamster__limb--bl"></div>
+                        <div class="hamster__tail"></div>
+                    </div>
+                </div>
+                <div class="spoke"></div>
+            </div>
+        </div>
+
+        {% if recommendations %}
+        <h2>Recommendations :</h2>
+        <p>{{ recommendations|safe }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+          function showLoadingMessage() {
+            document.getElementById('loading').style.display = 'block'; // Show loading message
+        }
+
+         
+
+        function toggleProfileCard() {
+            const profileCard = document.getElementById('profileCard');
+            profileCard.classList.toggle('visible');
+        }
+
+        function closeProfileCard() {
+            const profileCard = document.getElementById('profileCard');
+            profileCard.classList.remove('visible');
+        }
+
+          
+
+           
+    </script>
+
+    <button class="fab" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+        <img class="image-button"src="{{ url_for('static', filename='images/bookk.png') }}" alt="Button Image">
+
+    </button>
+
+    <div id="chat-screen" class="chat-container hidden">
+        <div class="chat-header">
+            Certifications and tutorials
+            <i class="fas fa-times close-chat" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body">
+            <div class="chat-message bot" style="width: 280px">
+                <!-- Chatbot messages will go here -->
+            </div>
+        </div>
+        <div class="chat-footer">
+            <form id="chatForm" action="{{ url_for('recommend') }}" method="POST">
+                <div class="scrollable">
+                    {% if chats %}
+                    <p>{{ chats|safe }}</p>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
