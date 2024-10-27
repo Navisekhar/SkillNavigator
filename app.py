@@ -80,6 +80,8 @@ def recommend():
 def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
-
 if __name__ == '__main__':
+    port = int(os.getenv("PORT", 3001))  # Use PORT environment variable
+    app.run(host='0.0.0.0', port=port, debug=True)
+#if __name__ == '__main__':
     app.run(port=int(os.getenv("PORT", 3001)), debug=True)
