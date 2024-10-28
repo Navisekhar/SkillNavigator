@@ -67,7 +67,7 @@ def recommend():
         response = model.generate_content(f"What job roles are suitable for someone skilled in {skill}? Provide a list of 6 job roles and descriptions in HTML table format with the following CSS: table {{ width: 100%; border-collapse: collapse; font-family: sans-serif; }} th, td {{ padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }} th {{ background-color: #3498db; color: white; }}")
         recommendations = response.text.strip()
         
-        response = model.generate_content(f"Recommend online courses including YouTube courses for {chat} without links. Provide a list of 6 famous courses from the internet in bullet points in HTML format with the following CSS for cards: .card {{ width: 300px; margin: 10px; background-color: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow: hidden; }} .card-header {{ background-color: #3498db; }}. make header small")
+        response = model.generate_content(f"Recommend online courses including YouTube courses for {chat} without links. Provide a list of 6 famous courses from the internet in bullet points in HTML format with the following CSS for cards: .card {{ width: 300px; margin: 10px; background-color: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow: hidden; }} .card-header {{ background-color: #3498db; }}. make card header small")
         chats = response.text.strip()
 
     except Exception as e:
